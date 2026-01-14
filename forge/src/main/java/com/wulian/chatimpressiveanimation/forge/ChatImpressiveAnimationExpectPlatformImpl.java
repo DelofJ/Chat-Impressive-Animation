@@ -1,6 +1,6 @@
-package com.wulian.chatimpressiveanimation.neoforge;
+package com.wulian.chatimpressiveanimation.forge;
 
-import com.wulian.chatimpressiveanimation.neoforge.loader.api.ForgifiedLoader;
+import com.wulian.chatimpressiveanimation.forge.loader.api.ForgifiedLoader;
 
 public class ChatImpressiveAnimationExpectPlatformImpl {
     public static Object getObjectShareItem(String key) {

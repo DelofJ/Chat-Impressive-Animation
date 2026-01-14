@@ -1,4 +1,4 @@
-package com.wulian.chatimpressiveanimation.neoforge;
+package com.wulian.chatimpressiveanimation.forge;
 
 import com.wulian.chatimpressiveanimation.ChatImpressiveAnimation;
 import com.wulian.chatimpressiveanimation.config.ConfigUtil;
@@ -15,8 +15,8 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import java.util.function.Function;
 
 @Mod(value = ChatImpressiveAnimation.MOD_ID, dist = Dist.CLIENT)
-public class ChatImpressiveAnimationClientNeoForge {
-    public ChatImpressiveAnimationClientNeoForge() {
+public class ChatImpressiveAnimationClientForge {
+    public ChatImpressiveAnimationClientForge() {
         if (FMLEnvironment.getDist().isClient()) {
 			ConfigUtil.getConfig();
 

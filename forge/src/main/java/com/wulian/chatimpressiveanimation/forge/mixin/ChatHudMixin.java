@@ -1,4 +1,4 @@
-package com.wulian.chatimpressiveanimation.neoforge.mixin;
+package com.wulian.chatimpressiveanimation.forge.mixin;
 
 import com.wulian.chatimpressiveanimation.ChatImpressiveAnimationExpectPlatform;
 import com.wulian.chatimpressiveanimation.config.ConfigUtil;

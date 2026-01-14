@@ -1,4 +1,4 @@
-package com.wulian.chatimpressiveanimation.neoforge.loader.api;
+package com.wulian.chatimpressiveanimation.forge.loader.api;
 
 import java.util.function.BiConsumer;
 

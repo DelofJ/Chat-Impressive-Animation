@@ -1,6 +1,6 @@
-package com.wulian.chatimpressiveanimation.neoforge.loader.api;
+package com.wulian.chatimpressiveanimation.forge.loader.api;
 
-import com.wulian.chatimpressiveanimation.neoforge.loader.impl.ForgifiedLoaderImpl;
+import com.wulian.chatimpressiveanimation.forge.loader.impl.ForgifiedLoaderImpl;
 
 public interface ForgifiedLoader {
 	/**

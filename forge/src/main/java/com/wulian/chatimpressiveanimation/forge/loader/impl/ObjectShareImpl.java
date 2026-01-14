@@ -1,6 +1,6 @@
-package com.wulian.chatimpressiveanimation.neoforge.loader.impl;
+package com.wulian.chatimpressiveanimation.forge.loader.impl;
 
-import com.wulian.chatimpressiveanimation.neoforge.loader.api.ObjectShare;
+import com.wulian.chatimpressiveanimation.forge.loader.api.ObjectShare;
 
 import java.util.*;
 import java.util.function.BiConsumer;
