@@ -6,7 +6,6 @@
 	"client": [
 		"ChatHudAccessor",
 		"ChatHudLineAccessor",
-		"ChatHudLineVisibleMixin",
 		"ChatScreenMixin"
 	],
 	"injectors": {

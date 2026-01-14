@@ -3,24 +3,23 @@ package com.wulian.chatimpressiveanimation.forge;
 import com.wulian.chatimpressiveanimation.ChatImpressiveAnimation;
 import com.wulian.chatimpressiveanimation.config.ConfigUtil;
 import com.wulian.chatimpressiveanimation.config.ModConfigs;
-import me.shedaniel.autoconfig.AutoConfigClient;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.gui.screens.Screen;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.client.ConfigGuiHandler;
 
 import java.util.function.Function;
 
-@Mod(value = ChatImpressiveAnimation.MOD_ID, dist = Dist.CLIENT)
+@Mod(value = ChatImpressiveAnimation.MOD_ID)
 public class ChatImpressiveAnimationClientForge {
     public ChatImpressiveAnimationClientForge() {
-        if (FMLEnvironment.getDist().isClient()) {
+        if (FMLEnvironment.dist.isClient()) {
 			ConfigUtil.getConfig();
 
-			registerConfigScreen(ChatImpressiveAnimation.MOD_ID, screen -> AutoConfigClient.getConfigScreen(ModConfigs.class, screen).get());
+			registerConfigScreen(ChatImpressiveAnimation.MOD_ID, screen -> AutoConfig.getConfigScreen(ModConfigs.class, screen).get());
 
 			ChatImpressiveAnimation.LOGGER.info("Chat Impressive Animation is loaded!");
         }
@@ -28,7 +27,7 @@ public class ChatImpressiveAnimationClientForge {
 
 	public static void registerConfigScreen(String modid, Function<Screen, Screen> screenFunction) {
 		ModContainer modContainer = ModList.get().getModContainerById(modid).orElseThrow();
-		modContainer.registerExtensionPoint(IConfigScreenFactory.class,
-			(client, screen) -> screenFunction.apply(screen));
+		modContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
+			() -> new ConfigGuiHandler.ConfigGuiFactory((client, screen) -> screenFunction.apply(screen)));
 	}
 }

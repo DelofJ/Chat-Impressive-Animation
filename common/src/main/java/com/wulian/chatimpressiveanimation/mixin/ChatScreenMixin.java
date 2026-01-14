@@ -1,13 +1,12 @@
 package com.wulian.chatimpressiveanimation.mixin;
 
-import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.Message;
 import com.wulian.chatimpressiveanimation.config.ConfigUtil;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.client.input.KeyEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,7 +31,7 @@ public class ChatScreenMixin {
 	public final Minecraft client = Minecraft.getInstance();
 
 	@Inject(method = "render", at = @At("HEAD"))
-	private void renderStart(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+	private void renderStart(PoseStack poseStack, int i, int j, float f, CallbackInfo ci) {
 		if (!ConfigUtil.getConfig().enableChatBarAnimation) return;
 
 		if (client.player != null && !wasOpenedLastFrame && !client.player.isSleeping()) {
@@ -49,8 +48,8 @@ public class ChatScreenMixin {
 		float easedAlpha = EASE_OUT_FACTOR * alpha * alpha * alpha - EASE_IN_OUT_FACTOR * alpha * alpha;
 		offsetY = easedAlpha * FADE_OFFSET * screenFactor;
 
-		context.pose().pushMatrix();
-		context.pose().translate(0, offsetY);
+		poseStack.pushPose();
+		poseStack.translate(0, offsetY, 0);
 
 		if (isClosing) {
 			GlStateManager._enableBlend();
@@ -78,8 +77,8 @@ public class ChatScreenMixin {
 	}
 
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true, require = 0)
-	private void onKeyPressed(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
-		if (input.key() == 256) { // ESC
+	private void onKeyPressed(int i, int j, int k, CallbackInfoReturnable<Boolean> cir) {
+		if (i == 256) { // ESC
 			if (ConfigUtil.getConfig().enableChatBarAnimation && !hasActiveChatMessages()) {
 				isClosing = true;
 				animationStartTime = System.currentTimeMillis();
@@ -91,10 +90,10 @@ public class ChatScreenMixin {
 	}
 
 	@Inject(method = "render", at = @At("TAIL"))
-	private void renderEnd(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+	private void renderEnd(PoseStack poseStack, int i, int j, float f, CallbackInfo ci) {
 		if (!ConfigUtil.getConfig().enableChatBarAnimation) return;
 
-		context.pose().popMatrix();
+		poseStack.popPose();
 
 		if (isClosing) {
 			GlStateManager._disableBlend();

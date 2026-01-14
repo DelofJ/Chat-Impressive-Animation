@@ -1,16 +1,14 @@
 package com.wulian.chatimpressiveanimation.forge.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.wulian.chatimpressiveanimation.ChatImpressiveAnimationExpectPlatform;
 import com.wulian.chatimpressiveanimation.config.ConfigUtil;
 import net.minecraft.client.GuiMessage;
-import net.minecraft.client.GuiMessageTag;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MessageSignature;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,8 +24,10 @@ import java.util.List;
 @Mixin(ChatComponent.class)
 public class ChatHudMixin {
 	@Shadow private int chatScrollbarPos;
-	@Shadow @Final private List<GuiMessage.Line> trimmedMessages;
-	@Shadow private int getLineHeight() { return 0; }
+	@Shadow @Final private List<GuiMessage<FormattedCharSequence>> trimmedMessages;
+	/*@Shadow public int getLinesPerPage() {
+		return this.getHeight() / 9;
+	}*/
 	@Unique private final ArrayList<Long> messageTimestamps = new ArrayList<>();
 
 	@Unique private final int chatSendingAnimationFadeTime = ConfigUtil.getConfig().chatSendingAnimationFadeTime;
@@ -37,7 +37,7 @@ public class ChatHudMixin {
 	private void calculateYOffset() {
 		// Calculate current required offset to achieve slide in from bottom effect
 		try {
-			int lineHeight = this.getLineHeight();
+			int lineHeight = 9;
 			// scale * lineHeight
 			float fadeOffsetYScale = 0.8f;
 			float maxDisplacement = (float)lineHeight * fadeOffsetYScale;
@@ -54,7 +54,7 @@ public class ChatHudMixin {
 	}
 
 	@Inject(method = "render", at = @At("HEAD"))
-	private void onRenderStart(GuiGraphics context, Font font, int currentTick, int mouseX, int mouseY, boolean focused, boolean open, CallbackInfo ci) {
+	private void onRenderStart(PoseStack arg, int i, CallbackInfo ci) {
 		if (!ConfigUtil.getConfig().enableChatSendingAnimation) return;
 		calculateYOffset();
 
@@ -66,11 +66,11 @@ public class ChatHudMixin {
 			raisedOffset -= distance;
 		}
 
-		context.pose().translate(0, chatDisplacementY + raisedOffset);
+		arg.translate(0, chatDisplacementY + raisedOffset, 0);
 	}
 
 	@Inject(method = "render", at = @At("TAIL"))
-	private void onRenderEnd(GuiGraphics context, Font font, int currentTick, int mouseX, int mouseY, boolean focused, boolean open, CallbackInfo ci) {
+	private void onRenderEnd(PoseStack arg, int i, CallbackInfo ci) {
 		// Apply Raised mod compatibility
 		float raisedOffset = 0;
 		if (ChatImpressiveAnimationExpectPlatform.getObjectShareItem("raised:hud") instanceof Integer distance) {
@@ -79,11 +79,11 @@ public class ChatHudMixin {
 			raisedOffset -= distance;
 		}
 
-		context.pose().translate(0, -(chatDisplacementY + raisedOffset));
+		arg.translate(0, -(chatDisplacementY + raisedOffset), 0);
 	}
 
-	@Inject(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", at = @At("TAIL"))
-	private void addMessage(Component message, MessageSignature signatureData, GuiMessageTag indicator, CallbackInfo ci) {
+	@Inject(method = "addMessage(Lnet/minecraft/network/chat/Component;IIZ)V", at = @At("TAIL"))
+	private void addMessage(Component arg, int i, int j, boolean bl, CallbackInfo ci) {
 		messageTimestamps.addFirst(System.currentTimeMillis());
 		while (this.messageTimestamps.size() > this.trimmedMessages.size()) {
 			this.messageTimestamps.removeLast();
