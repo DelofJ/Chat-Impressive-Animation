@@ -41,7 +41,7 @@ public class ChatHudMixin {
 			// scale * lineHeight
 			float fadeOffsetYScale = 0.8f;
 			float maxDisplacement = (float)lineHeight * fadeOffsetYScale;
-			long timestamp = messageTimestamps.getFirst();
+			long timestamp = messageTimestamps.get(0);
 			long timeAlive = System.currentTimeMillis() - timestamp;
 			if (timeAlive < chatSendingAnimationFadeTime && this.chatScrollbarPos == 0) {
 				chatDisplacementY = (int)(maxDisplacement - (((float) timeAlive / chatSendingAnimationFadeTime) * maxDisplacement));
@@ -84,9 +84,9 @@ public class ChatHudMixin {
 
 	@Inject(method = "addMessage(Lnet/minecraft/network/chat/Component;IIZ)V", at = @At("TAIL"))
 	private void addMessage(Component component, int i, int j, boolean bl, CallbackInfo ci) {
-		messageTimestamps.addFirst(System.currentTimeMillis());
+		messageTimestamps.add(0, System.currentTimeMillis());
 		while (this.messageTimestamps.size() > this.trimmedMessages.size()) {
-			this.messageTimestamps.removeLast();
+			this.messageTimestamps.remove(messageTimestamps.size() - 1);
 		}
 	}
 }

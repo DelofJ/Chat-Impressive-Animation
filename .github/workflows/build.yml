@@ -29,8 +29,8 @@ jobs:
           name: fabric-artifacts
           path: fabric/build/libs/*.jar
 
-      - name: Upload NeoForge artifacts
+      - name: Upload Forge artifacts
         uses: actions/upload-artifact@v5
         with:
-          name: neoforge-artifacts
-          path: neoforge/build/libs/*.jar
+          name: forge-artifacts
+          path: forge/build/libs/*.jar

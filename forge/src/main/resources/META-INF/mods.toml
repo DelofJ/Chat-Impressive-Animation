@@ -14,22 +14,16 @@ Makes the chat look better by adding animations, such as opening/closing the cha
 '''
 logoFile = "icon.png"
 
-[[mixins]]
-config = "chatimpressiveanimation.mixins.json"
-
-[[mixins]]
-config = "chatimpressiveanimation.forge.mixins.json"
-
 [[dependencies.chatimpressiveanimation]]
 modId = "minecraft"
-type = "required"
-versionRange = "[1.21.11,)"
+mandatory = true
+versionRange = "[1.18,1.18.2]"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.chatimpressiveanimation]]
 modId = "cloth_config"
-type = "required"
+mandatory = true
 versionRange = "*"
 ordering = "AFTER"
 side = "BOTH"
